@@ -1,25 +1,26 @@
-name: SonarQube Scan
+name: SonarQube Analysis
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
   pull_request:
-    branches:
-      - main
+    branches: [ "main" ]
 
 jobs:
-  sonarQube:
-    name: Run SonarQube Scan
+  sonar:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Optional: যদি Node.js, Java বা Maven প্রোজেক্ট হয় তাহলে এখানে build যোগ করতে পারো
+      # - name: Build project
+      #   run: mvn clean verify
+
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@v2
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_HOST_URL: "http://13.127.128.146:9000"
 
