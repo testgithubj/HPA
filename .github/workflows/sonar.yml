@@ -10,12 +10,31 @@ on:
 
 jobs:
   sonar:
-    name: SonarQube Analysis
+    name: Run SonarQube Analysis
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
+      # 🟢 ১️⃣ রিপো ক্লোন করা
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      # 🟢 ২️⃣ জাভা ইনস্টল করা (Sonar Scanner-এর জন্য প্রয়োজন হতে পারে)
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # 🟢 ৩️⃣ SonarQube স্ক্যান চালানো
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      # 🟢 ৪️⃣ ঐচ্ছিক: যদি প্রয়োজনে SonarQube Quality Gate চেক করো
+      - name: SonarQube Quality Gate Check
+        uses: sonarsource/sonarqube-quality-gate-action@master
         env:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
